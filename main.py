@@ -1,9 +1,11 @@
 import json
 from endpoints import handle_insert, handle_select
 
+profile = "gwdeib01"
+
 def lambda_handler(event, context):
     # Route based on method and path
-    if event['httpMethod'] == 'POST' and event['path'] == '/instructor/insert':
+    if event['httpMethod'] == 'POST' and event['path'] == f'/{profile}/insert':
         try:
             body = json.loads(event['body'])
             return handle_insert(body)
@@ -13,7 +15,7 @@ def lambda_handler(event, context):
                 'body': json.dumps('Invalid JSON format')
             }
 
-    elif event['httpMethod'] == 'POST' and event['path'] == '/instructor/select':
+    elif event['httpMethod'] == 'POST' and event['path'] == f'/{profile}/select':
         try:
             body = json.loads(event['body'])
             return handle_select(body)
