@@ -1,7 +1,6 @@
 import json
 from endpoints import handle_insert, handle_select
-
-profile = "gwdeib01"
+from api_config import profile
 
 def lambda_handler(event, context):
     # Route based on method and path

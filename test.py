@@ -1,13 +1,17 @@
-from main import lambda_handler
+from lambda_function import lambda_handler
+from api_config import profile
+
+# DO NOT INCLUDE THIS FILE IN PUBLICATION TO AWS LAMBDA
 
 def test_lambda_handler():
-    # Test insert
+    query = 'SELECT * FROM employees WHERE position = \\"Developer\\"'
+
     event = {
         'httpMethod': 'POST',
-        'path': '/gwdeib01/insert',
-        'body': {
-            "name": "John Doe", 
-            "email": "JohnDoe@louisville.edu"
-        }
+        'path': f'/{profile}/select',
+        'body': f'{{ "query": "{query}"}}'
     }
-    assert lambda_handler(event) == "Hello World"
+    print(lambda_handler(event, None))
+
+if (__name__ == "__main__"):
+    test_lambda_handler()
