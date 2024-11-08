@@ -1,17 +1,53 @@
+import unittest
 from lambda_function import lambda_handler
-from api_config import profile
+from api_config import profile, connection_info
 
 # DO NOT INCLUDE THIS FILE IN PUBLICATION TO AWS LAMBDA
 
-def test_lambda_handler():
-    query = 'SELECT * FROM employees WHERE position = \\"Developer\\"'
+# Change connection info to test stuff
+connection_info = {
+    "host": "127.0.0.1",
+    "user": "test",
+    "passwd": "test1234",
+    "db": "lab4",
+    "port": 3306,
+    "connect_timeout": 5
+}
 
-    event = {
+# Write tests here
+
+# Create a new class to test a specific endpoint.
+# This class is just to test if the lambda function is working
+class TestLambdaHandler(unittest.TestCase):
+    def test_select(self):
+        query = 'SELECT * FROM foo'
+
+        event = {
         'httpMethod': 'POST',
         'path': f'/{profile}/select',
         'body': f'{{ "query": "{query}"}}'
-    }
-    print(lambda_handler(event, None))
+        }
+
+        expects = {
+            'statusCode': 200,
+            'body': '[[1, "world"], [3, "hello"]]'
+        }
+        
+        self.assertEqual(lambda_handler(event, None), expects, "Not returning correct select query response")
+
+    def test_insert(self):
+        query = 'INSERT INTO foo VALUES (2, \\"idk\\")'
+
+        event = {
+            'httpMethod': 'POST',
+            'path': f'/{profile}/insert',
+            'body': f'{{ "query": "{query}"}}'
+        }
+
+        expects = "Hello World"
+        self.assertEqual(lambda_handler(event, None), expects, "Not returning correct insert query response")
+
 
 if (__name__ == "__main__"):
-    test_lambda_handler()
+    unittest.main()
+    

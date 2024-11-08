@@ -11,7 +11,13 @@ def connect_to_db():
         return None
     
 def handle_insert(body):
-    return "Hello World"
+    connection = connect_to_db()
+    return {
+        'statusCode': 200,
+        'body': json.dumps({
+            'msg': 'endpoint not implemented'
+        })
+    }
 
 def handle_select(body):
     connection = connect_to_db()
@@ -26,3 +32,5 @@ def handle_select(body):
                 'statusCode': 200,
                 'body': json.dumps(result)
             }
+
+
