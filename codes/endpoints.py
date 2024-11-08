@@ -26,3 +26,19 @@ def handle_select(body):
                 'statusCode': 200,
                 'body': json.dumps(result)
             }
+
+def handle_delete(body):
+    connection = connect_to_db()
+
+    postData = body
+
+    query = {'delete * from movies where ', postData['comparison'], '=', postData['input']}
+
+    with connection.cursor() as cursor:
+        cursor.execute(query)
+        result = cursor.fetchall()
+        
+        return {
+                'statusCode': 200,
+                'body': json.dumps(result)
+            }
