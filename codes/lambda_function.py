@@ -1,5 +1,5 @@
 import json
-from endpoints import handle_insert, handle_select,handle_delete
+from endpoints import handle_insert, handle_complex_select,handle_delete
 from api_config import profile
 
 def lambda_handler(event, context):
@@ -14,10 +14,10 @@ def lambda_handler(event, context):
                 'body': json.dumps('Invalid JSON format')
             }
 
-    elif event['httpMethod'] == 'POST' and event['path'] == f'/{profile}/select':
+    elif event['httpMethod'] == 'POST' and event['path'] == f'/{profile}/Cselect':
         try:
             body = json.loads(event['body'])
-            return handle_select(body)
+            return handle_complex_select(body)
         except json.JSONDecodeError:
             return {
                 'statusCode': 400,
