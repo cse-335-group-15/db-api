@@ -4,7 +4,13 @@ from api_config import profile
 
 def lambda_handler(event, context):
     # Route based on method and path
-    if event['httpMethod'] == 'POST' and event['path'] == f'/{profile}/insert':
+    if event['httpMethod'] != 'POST':
+        return {
+            'statusCode': 405,
+            'body': json.dumps('Method not allowed')
+        }
+
+    if event['path'] == f'/{profile}/insert':
         try:
             body = json.loads(event['body'])
             return handle_insert(body)
@@ -14,7 +20,7 @@ def lambda_handler(event, context):
                 'body': json.dumps('Invalid JSON format')
             }
 
-    elif event['httpMethod'] == 'POST' and event['path'] == f'/{profile}/Cselect':
+    elif event['path'] == f'/{profile}/select':
         try:
             body = json.loads(event['body'])
             return handle_complex_select(body)
@@ -41,3 +47,4 @@ def lambda_handler(event, context):
                 'error': 'Path not found'
             })
         }
+    
