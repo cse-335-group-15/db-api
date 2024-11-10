@@ -30,6 +30,16 @@ def lambda_handler(event, context):
                 'body': json.dumps('Invalid JSON format')
             }
         
+    elif event['httpMethod'] == 'POST' and event['path'] == f'/{profile}/Cselect':
+        try:
+            body = json.loads(event['body'])
+            return handle_complex_select(body)
+        except json.JSONDecodeError:
+            return {
+                'statusCode': 400,
+                'body': json.dumps('Invalid JSON format')
+            }
+        
     elif event['httpMethod'] == 'POST' and event['path'] == f'/{profile}/delete':
         try:
             body = json.loads(event['body'])
