@@ -50,6 +50,7 @@ class TestLambdaHandler(unittest.TestCase):
         self.assertEqual(lambda_handler(event, None), expects, "Not returning correct insert query response")
 
 
+
 if (__name__ == "__main__"):
     unittest.main()
     

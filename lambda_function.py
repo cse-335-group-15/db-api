@@ -30,6 +30,7 @@ def lambda_handler(event, context):
                 'body': json.dumps('Invalid JSON format')
             }
         
+
     elif event['httpMethod'] == 'POST' and event['path'] == f'/{profile}/Cselect':
         try:
             body = json.loads(event['body'])

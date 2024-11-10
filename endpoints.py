@@ -52,7 +52,7 @@ def handle_delete(body):
                 'headers' :  {
                     'Access-Control-Allow-Origin': '*'}
         }
-
+    
 def handle_update(body):
     connection = connect_to_db()
 
