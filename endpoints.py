@@ -56,7 +56,11 @@ def handle_delete(body):
 def handle_update(body):
     connection = connect_to_db()
 
-    query = {'update table ratings set votes = {votes}, score = {score} where id = (SELECT review_id FROM movies WHERE id = {movie_id})'}
+    votes = body.get('votes')
+    score = body.get('score')
+    movie_id = body.get('movie_id')
+
+    query = {'update table ratings where id = (SELECT review_id FROM movies WHERE id = ', movie_id, ')'}
 
     with connection.cursor() as cursor:
         cursor.execute(query)
