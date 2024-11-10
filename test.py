@@ -26,13 +26,16 @@ class TestLambdaHandler(unittest.TestCase):
 
         event = {
         'httpMethod': 'POST',
-        'path': f'/{profile}/select',
-        'body': f'{{ "query": "{query}"}}'
+        'path': f'/{profile}/query',
+        'body': f'{{ "query": "{query}", "foo": "bar" }}'
         }
 
         expects = {
             'statusCode': 200,
-            'body': '[[1, "world"], [3, "hello"]]'
+            'body': '[[1, "world"], [3, "hello"]]',
+            'headers': {
+                'Access-Control-Allow-Origin': '*'
+            }
         }
         
         self.assertEqual(lambda_handler(event, None), expects, "Not returning correct select query response")
@@ -46,7 +49,13 @@ class TestLambdaHandler(unittest.TestCase):
             'body': f'{{ "query": "{query}"}}'
         }
 
-        expects = "Hello World"
+        expects = {
+            'statusCode': 400,
+            'body': '{"error": "Couldn\'t generate query"}',
+            'headers': {
+                'Access-Control-Allow-Origin': '*'
+            }
+        }
         self.assertEqual(lambda_handler(event, None), expects, "Not returning correct insert query response")
 
 
