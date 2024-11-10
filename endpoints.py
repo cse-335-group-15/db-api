@@ -1,17 +1,23 @@
 import pymysql
 import json
-from api_config import connection_info
+import api_config
 
 def connect_to_db():
     try:
-        connection: pymysql.Connection = pymysql.connect(**connection_info)
+        connection: pymysql.Connection = pymysql.connect(**api_config.connection_info)
         return connection
     except pymysql.MySQLError as e:
         print(f"ERROR: Unable to connect to MySQL. {e}")
         return None
     
 def handle_insert(body):
-    return "Hello World"
+    connection = connect_to_db()
+    return {
+        'statusCode': 200,
+        'body': json.dumps({
+            'msg': 'endpoint not implemented'
+        })
+    }
 
 def handle_complex_select(body):
     connection = connect_to_db()

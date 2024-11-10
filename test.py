@@ -1,11 +1,13 @@
 import unittest
 from lambda_function import lambda_handler
-from api_config import profile, connection_info
+import api_config
+from api_config import profile
+
 
 # DO NOT INCLUDE THIS FILE IN PUBLICATION TO AWS LAMBDA
 
 # Change connection info to test stuff
-connection_info = {
+api_config.connection_info = {
     "host": "127.0.0.1",
     "user": "test",
     "passwd": "test1234",
@@ -17,7 +19,7 @@ connection_info = {
 # Write tests here
 
 # Create a new class to test a specific endpoint.
-# This class is just to test if the lambda function is working
+# This class is just to test if the lambda function is working in general.
 class TestLambdaHandler(unittest.TestCase):
     def test_select(self):
         query = 'SELECT * FROM foo'
