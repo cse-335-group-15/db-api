@@ -24,7 +24,6 @@ def handle_complex_select(body):
 
     query = 'Select name as movie_name, first_name as star_first_name, last_name as star_last_name FROM movie Inner join cast on movie.StarID = cast.ID Inner join reviews on movie.ReviewsID = reviews.ReviewsID Where Score > (select AVG(Score)  FROM reviews)'
 
-
     with connection.cursor() as cursor:
         cursor.execute(query)
         result = cursor.fetchall()
@@ -53,3 +52,19 @@ def handle_delete(body):
                 'headers' :  {
                     'Access-Control-Allow-Origin': '*'}
         }
+
+def handle_update(body):
+    connection = connect_to_db()
+
+    query = {'update table ratings set votes = {votes}, score = {score} where id = (SELECT review_id FROM movies WHERE id = {movie_id})'}
+
+    with connection.cursor() as cursor:
+        cursor.execute(query)
+        result = cursor.fetchall()
+
+    return {
+                'statusCode': 200,
+                'body': json.dumps(result),
+                'headers' :  {
+                    'Access-Control-Allow-Origin': '*'}
+            }
