@@ -17,8 +17,41 @@ def handle_query(query):
     return query
 
 @endpoint(path='insert')
-def handle_insert():
-    return None
+def handle_insert(castID, first_name, middle_name, last_name):
+    
+    query = {'Insert into Cast (castID, firstName, middleName, lastName) values ', 
+             '(', castID, ', ', first_name, ', ', middle_name, ', ', last_name, ');'}
+    
+    return query
+
+def handle_insert(movie_id, name, rating, genreID, year, companyID, directorID, writerID, starID, reviewID):
+
+    query = {'Insert into Movies (movie_id, name, rating, genreID, year, companyID, directorID, writerID, starID, reviewID) ', 
+             'values (', movie_id, ', ', name, ', ', rating, ', ', genreID, ', ', year, ', ', companyID, ', ', 
+             directorID, ', ', writerID, ', ', starID, ', ', reviewID, ');'}
+
+    return query
+
+def handle_insert(companyID, company, country):
+    
+    query = {'Insert into Studios (companyID, company, country) values ', 
+             '(', companyID, ', ', company, ', ', country, ');'}    
+    
+    return query
+
+def handle_insert(reviewID, score, votes):
+    
+    query = {'Insert into Reviews (reviewID, score, votes) values ', 
+             '(', reviewID, ', ', score, ', ', votes, ');'}    
+    
+    return query
+
+def handle_insert(genreID, genre):
+    
+    query = {'Insert into Reviews (genreID, genre) values ', 
+             '(', genreID, ', ', genre, ');'}    
+    
+    return query
 
 @endpoint(path='Cselect')
 def handle_complex_select(body):
@@ -37,5 +70,5 @@ def handle_delete(comparison, input):
 
 @endpoint(path='update')
 def handle_update(votes, score, movie_id):
-    query = f'update table ratings set votes = {votes}, score = {score} where id = (SELECT review_id FROM movies WHERE id = {movie_id})'
+    query = {'update table ratings set votes = ', votes, 'score = ' , score, 'where id = (SELECT review_id FROM movies WHERE id = ', movie_id, ')'}
     return query
