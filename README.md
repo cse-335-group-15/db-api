@@ -3,9 +3,9 @@
 Run these commands in the root directory of the project to generate the zip file (in powershell)
 ```powershell
 mkdir upload
-cp lambda_function.py,api_config.py,endpoints.py .\upload\
+cp lambda_function.py,api_config.py,endpoints.py,utils.py .\upload\
 cp -r .\venv\Lib\site-packages\* .\upload\
-Compress-Archive .\upload\* .\function.zip
+Compress-Archive .\upload\* .\function.zip -Update
 rm -r .\upload
 ```
 
