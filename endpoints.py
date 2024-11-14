@@ -74,7 +74,25 @@ def handle_update(votes, score, movie_id):
     return query
 
 @endpoint(path='select')
-def handle_select(Year):
-    query = {'Select * FROM  movie WHERE Year = ', Year}
+def handle_select(body):
+    query = {'''Select movies.ID, name, Rating, G.genre as genre, Year, studios.Company as company, Studios.Country as country, D.full_name as Director_name, W.full_name as Writer_name, S.full_name as Star_name, Score, Votes
+                FROM  movies
+                inner join cast S on movies.StarID = S.ID
+                inner join cast W on movies.WriterID = W.ID
+                inner join cast D on movies.DirectorID = D.ID
+                inner join studios on movies.CompanyID = studios.ID
+                inner join genres G on movies.GenreID = G.ID
+                inner join Reviews on movies.ReviewID = Reviews.ID'''}
     return query
-  
+
+@endpoint(path='find_duos')
+def handle_(body):
+    query ={'''with duos as( select Director.full_name as Director_name, Star.full_name as Star_name, count(*) 
+                from movies 
+                inner join cast Director on movies.DirectorID = Director.ID
+                inner join cast Star on movies.StarID = Star.ID
+                group by DirectorID, StarID
+                having count(*))
+
+               select *from duos'''}
+    return query
