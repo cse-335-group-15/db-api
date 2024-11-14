@@ -72,3 +72,9 @@ def handle_delete(comparison, input):
 def handle_update(votes, score, movie_id):
     query = {'update table ratings set votes = ', votes, 'score = ' , score, 'where id = (SELECT review_id FROM movies WHERE id = ', movie_id, ')'}
     return query
+
+@endpoint(path='select')
+def handle_select(Year):
+    query = {'Select * FROM  movie WHERE Year = ', Year}
+    return query
+  
