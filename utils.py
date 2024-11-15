@@ -6,7 +6,7 @@ from inspect import signature
 
 import api_config
 
-endpoint_list: dict[str, Callable] = {}
+endpoint_list: dict[str, list[Callable]] = {}
 
 def connect_to_db():
     try:
@@ -24,6 +24,7 @@ def endpoint(path: str):
             connection = connect_to_db()
 
             args = {}
+
             for key in body.keys():
                 if key in signature(func).parameters:
                     args[key] = body[key]
@@ -61,7 +62,12 @@ def endpoint(path: str):
                         'body': json.dumps(result),
                         'headers' :  {
                             'Access-Control-Allow-Origin': '*'}
-                }      
-        endpoint_list[path] = endpoint_wrapper
+                }
+
+        key = f'/{api_config.profile}/{path}'
+        if key in endpoint_list:
+            endpoint_list[key].append(endpoint_wrapper)
+        else:
+            endpoint_list[key] = [endpoint_wrapper]
         return endpoint_wrapper
     return decorator

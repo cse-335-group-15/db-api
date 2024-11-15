@@ -19,20 +19,27 @@ def lambda_handler(event, context):
             }
         }
     
-    for path, endpoint in endpoint_list.items():
-        if event['path'] == f'/{profile}/{path}':
-            return endpoint(json.loads(event['body']))
-        
-    return {
-        'statusCode': 404,
-        'body': json.dumps({
-            'error': 'Path not found'
-        }),
-        'headers': {
-                'Access-Control-Allow-Origin': '*'
-        }
-    }    
 
+    if event['path'] not in endpoint_list:
+        return {
+                'statusCode': 404,
+                'body': json.dumps({
+                    'error': 'Path not found'
+                }),
+                'headers': {
+                        'Access-Control-Allow-Origin': '*'
+                }
+            }    
+
+    funcs = endpoint_list[event['path']]
+    
+    for func in funcs: 
+        try:
+            return func(json.loads(event['body']))
+        except TypeError:
+            continue
+        
+    
     
     
 

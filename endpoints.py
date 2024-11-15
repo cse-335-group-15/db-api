@@ -24,7 +24,7 @@ def handle_insert(crew_id, first_name, middle_name, last_name):
     
     return query
 
-
+@endpoint(path='insert')
 def handle_insert(movie_id, name, rating, genre_id, year, company_id, director_id, writer_id, star_id, review_id):
 
     query = {'Insert into movies (id, name, rating, genre_id, release_year, company_id, director_id, writer_id, star_id, review_id) ', 
@@ -33,6 +33,7 @@ def handle_insert(movie_id, name, rating, genre_id, year, company_id, director_i
 
     return query
 
+@endpoint(path='insert')
 def handle_insert(company_id, company, country):
     
     query = {'Insert into Studios (id, company, country) values ', 
@@ -40,6 +41,7 @@ def handle_insert(company_id, company, country):
     
     return query
 
+@endpoint(path='insert')
 def handle_insert(review_id, score, votes):
     
     query = {'Insert into Reviews (id, score, votes) values ', 
@@ -47,6 +49,7 @@ def handle_insert(review_id, score, votes):
     
     return query
 
+@endpoint(path='insert')
 def handle_insert(genre_id, genre):
     
     query = {'Insert into Reviews (id, genre) values ', 

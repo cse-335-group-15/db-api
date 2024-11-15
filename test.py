@@ -32,7 +32,7 @@ class TestLambdaHandler(unittest.TestCase):
 
         expects = {
             'statusCode': 200,
-            'body': '[[1, "world"], [3, "hello"]]',
+            'body': '[[1, "world"], [2, "boo"], [3, "hello"]]',
             'headers': {
                 'Access-Control-Allow-Origin': '*'
             }
