@@ -17,48 +17,49 @@ def handle_query(query):
     return query
 
 @endpoint(path='insert')
-def handle_insert(castID, first_name, middle_name, last_name):
+def handle_insert(crew_id, first_name, middle_name, last_name):
     
-    query = {'Insert into Cast (castID, firstName, middleName, lastName) values ', 
-             '(', castID, ', ', first_name, ', ', middle_name, ', ', last_name, ');'}
-    
-    return query
-
-def handle_insert(movie_id, name, rating, genreID, year, companyID, directorID, writerID, starID, reviewID):
-
-    query = {'Insert into Movies (movie_id, name, rating, genreID, year, companyID, directorID, writerID, starID, reviewID) ', 
-             'values (', movie_id, ', ', name, ', ', rating, ', ', genreID, ', ', year, ', ', companyID, ', ', 
-             directorID, ', ', writerID, ', ', starID, ', ', reviewID, ');'}
-
-    return query
-
-def handle_insert(companyID, company, country):
-    
-    query = {'Insert into Studios (companyID, company, country) values ', 
-             '(', companyID, ', ', company, ', ', country, ');'}    
+    query = {'Insert into crew (id, first_name, middle_name, last_name) values ', 
+             '(', crew_id, ', ', first_name, ', ', middle_name, ', ', last_name, ');'}
     
     return query
 
-def handle_insert(reviewID, score, votes):
+
+def handle_insert(movie_id, name, rating, genre_id, year, company_id, director_id, writer_id, star_id, review_id):
+
+    query = {'Insert into movies (id, name, rating, genre_id, release_year, company_id, director_id, writer_id, star_id, review_id) ', 
+             'values (', movie_id, ', ', name, ', ', rating, ', ', genre_id, ', ', year, ', ', company_id, ', ', 
+             director_id, ', ', writer_id, ', ', star_id, ', ', review_id, ');'}
+
+    return query
+
+def handle_insert(company_id, company, country):
     
-    query = {'Insert into Reviews (reviewID, score, votes) values ', 
-             '(', reviewID, ', ', score, ', ', votes, ');'}    
+    query = {'Insert into Studios (id, company, country) values ', 
+             '(', company_id, ', ', company, ', ', country, ');'}    
     
     return query
 
-def handle_insert(genreID, genre):
+def handle_insert(review_id, score, votes):
     
-    query = {'Insert into Reviews (genreID, genre) values ', 
-             '(', genreID, ', ', genre, ');'}    
+    query = {'Insert into Reviews (id, score, votes) values ', 
+             '(', review_id, ', ', score, ', ', votes, ');'}    
     
     return query
 
-@endpoint(path='Cselect')
-def handle_complex_select(body):
+def handle_insert(genre_id, genre):
+    
+    query = {'Insert into Reviews (id, genre) values ', 
+             '(', genre_id, ', ', genre, ');'}    
+    
+    return query
+
+@endpoint(path='cselect')
+def handle_complex_select():
     query = '''
     Select name as movie_name, first_name as star_first_name, last_name as star_last_name 
-    FROM movie Inner join cast on movie.StarID = cast.ID 
-        Inner join reviews on movie.ReviewsID = reviews.ReviewsID 
+    FROM movie Inner join crew on movie.star_id = crew.id 
+        Inner join reviews on movie.id = reviews.id 
     Where Score > (select AVG(Score) FROM reviews)
     '''
     return query
@@ -70,28 +71,28 @@ def handle_delete(comparison, input):
 
 @endpoint(path='update')
 def handle_update(votes, score, movie_id):
-    query = {'update table ratings set votes = ', votes, 'score = ' , score, 'where id = (SELECT review_id FROM movies WHERE id = ', movie_id, ')'}
+    query = {'update table reviews set votes = ', votes, 'score = ' , score, 'where id = (SELECT review_id FROM movies WHERE id = ', movie_id, ')'}
     return query
 
 @endpoint(path='select')
-def handle_select(body):
-    query = {'''Select movies.ID, name, Rating, G.genre as genre, Year, studios.Company as company, Studios.Country as country, D.full_name as Director_name, W.full_name as Writer_name, S.full_name as Star_name, Score, Votes
+def handle_select():
+    query = {'''Select movies.id, name, Rating, G.genre as genre, Year, studios.Company as company, Studios.Country as country, D.full_name as Director_name, W.full_name as Writer_name, S.full_name as Star_name, Score, Votes
                 FROM  movies
-                inner join cast S on movies.StarID = S.ID
-                inner join cast W on movies.WriterID = W.ID
-                inner join cast D on movies.DirectorID = D.ID
-                inner join studios on movies.CompanyID = studios.ID
-                inner join genres G on movies.GenreID = G.ID
-                inner join Reviews on movies.ReviewID = Reviews.ID'''}
+                inner join crew S on movies.Star_id = S.id
+                inner join crew W on movies.Writer_id = W.id
+                inner join crew D on movies.Director_id = D.id
+                inner join studios on movies.Company_id = studios.id
+                inner join genres G on movies.Genre_id = G.id
+                inner join Reviews on movies.Review_id = Reviews.id'''}
     return query
 
 @endpoint(path='find_duos')
-def handle_(body):
+def handle_find_duos():
     query ={'''with duos as( select Director.full_name as Director_name, Star.full_name as Star_name, count(*) 
                 from movies 
-                inner join cast Director on movies.DirectorID = Director.ID
-                inner join cast Star on movies.StarID = Star.ID
-                group by DirectorID, StarID
+                inner join crew Director on movies.Director_id = Director.id
+                inner join crew Star on movies.Star_id = Star.id
+                group by Director_id, Star_id
                 having count(*))
 
                select *from duos'''}
