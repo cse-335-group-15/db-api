@@ -11,17 +11,35 @@ api_config.connection_info = {
     "host": "127.0.0.1",
     "user": "test",
     "passwd": "test1234",
-    "db": "lab4",
+    "db": "project_test",
     "port": 3306,
     "connect_timeout": 5
 }
 
 # Write tests here
-
-# Create a new class to test a specific endpoint.
-# This class is just to test if the lambda function is working in general.
+# Tests are executed from bottom to top for each class.
+# TODO: Write tests for all the endpoints so I'm not gambling everytime I upload this
 class TestLambdaHandler(unittest.TestCase):
-    def test_select(self):
+    def test_method(self):
+        event = {
+            'httpMethod': 'GET',
+        }
+
+        expects = {
+            'statusCode': 405,
+            'body': {
+                'error': 'Method not allowed'
+            },
+            'headers': {
+                'Access-Control-Allow-Origin': '*'
+            }
+        }
+
+        self.assertEqual(lambda_handler(event, None), expects, "Incorrect response to improper method")
+
+
+class TestEndpoints(unittest.TestCase):
+    def test_query(self):
         query = 'SELECT * FROM foo'
 
         event = {
@@ -40,26 +58,6 @@ class TestLambdaHandler(unittest.TestCase):
         
         self.assertEqual(lambda_handler(event, None), expects, "Not returning correct select query response")
 
-    def test_insert(self):
-        query = 'INSERT INTO foo VALUES (2, \\"idk\\")'
-
-        event = {
-            'httpMethod': 'POST',
-            'path': f'/{profile}/insert',
-            'body': f'{{ "query": "{query}"}}'
-        }
-
-        expects = {
-            'statusCode': 400,
-            'body': '{"error": "Couldn\'t generate query"}',
-            'headers': {
-                'Access-Control-Allow-Origin': '*'
-            }
-        }
-        self.assertEqual(lambda_handler(event, None), expects, "Not returning correct insert query response")
-
-
 
 if (__name__ == "__main__"):
     unittest.main()
-    

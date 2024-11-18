@@ -13,7 +13,9 @@ def lambda_handler(event, context):
     if event['httpMethod'] != 'POST':
         return {
             'statusCode': 405,
-            'body': json.dumps('Method not allowed'),
+            'body': {
+                'error': 'Method not allowed'
+            },
             'headers': {
                 'Access-Control-Allow-Origin': '*'
             }
