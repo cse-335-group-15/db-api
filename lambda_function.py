@@ -38,6 +38,8 @@ def lambda_handler(event, context):
     for func in funcs: 
         try:
             return func(json.loads(event['body']))
+        except KeyError:
+            return func({})
         except TypeError:
             continue
         
