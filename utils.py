@@ -29,18 +29,20 @@ def endpoint(path: str):
                 if key in signature(func).parameters:
                     args[key] = body[key]
 
-            query = func(**args)
-
-            if (query == None):
+            try:
+                query = func(**args)
+            except Exception as e:
                 return {
                     'statusCode': 400,
                     'body': json.dumps({
-                        'error': 'Couldn\'t generate query'
+                        'error': 'Couldn\'t generate query',
+                        'msg': repr(e)
                     }),
                     'headers': {
                         'Access-Control-Allow-Origin': '*'
                     }
                 }
+            
 
             with connection.cursor() as cursor:
                 cursor.execute(query)
@@ -59,7 +61,10 @@ def endpoint(path: str):
 
                 return {
                         'statusCode': 200,
-                        'body': json.dumps(result),
+                        'body': json.dumps({
+                            'columns': cursor.description,
+                            'data': result
+                        }),
                         'headers' :  {
                             'Access-Control-Allow-Origin': '*'}
                 }
