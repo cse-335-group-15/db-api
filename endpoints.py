@@ -61,8 +61,8 @@ def handle_insert(genre_id, genre):
 def handle_complex_select():
     query = '''
     Select name as movie_name, first_name as star_first_name, last_name as star_last_name 
-    FROM movie Inner join crew on movie.star_id = crew.id 
-        Inner join reviews on movie.id = reviews.id 
+    FROM movies Inner join crew on movies.star_id = crew.id 
+        Inner join reviews on movies.id = reviews.id 
     Where Score > (select AVG(Score) FROM reviews)
     '''
     return query
