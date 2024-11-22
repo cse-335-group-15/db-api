@@ -91,7 +91,7 @@ def handle_select():
 
 @endpoint(path='find_duos')
 def handle_find_duos():
-    query ={'''with duos as( select Director.full_name as Director_name, Star.full_name as Star_name, count(*) 
+    query ={'''with duos as( select CONCAT(Director.first_name, " ", Director.last_name) as Director_name, CONCAT(Star.first_name, " ", Star.last_name) as Star_name, count(*) 
                 from movies 
                 inner join crew Director on movies.Director_id = Director.id
                 inner join crew Star on movies.Star_id = Star.id
