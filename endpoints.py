@@ -20,7 +20,7 @@ def handle_query(query):
 # Generic Table Select
 @endpoint(path='table')
 def handle_table(table):
-    query = f'SELECT * FROM {table}'
+    query = f'SELECT * FROM {table};'
     
     return query
 
@@ -45,21 +45,23 @@ INNER JOIN crew WC ON M.writer_id = WC.id
 INNER JOIN crew DC ON M.director_id = DC.id
 INNER JOIN studios S ON M.company_id = S.id
 INNER JOIN genres G ON M.genre_id = G.id
-INNER JOIN reviews R ON M.review_id = R.id;
+INNER JOIN reviews R ON M.review_id = R.id
+ORDER BY M.id;
     '''
     return query
 
 @endpoint(path='find_duos')
 def handle_find_duos():
     query = '''
-with duos as( select CONCAT(Director.first_name, " ", Director.last_name) as Director_name, CONCAT(Star.first_name, " ", Star.last_name) as Star_name, count(*) 
+with duos as( select CONCAT(Director.first_name, " ", Director.last_name) as Director_name, CONCAT(Star.first_name, " ", Star.last_name) as Star_name, count(*) as recurrences
 from movies 
 inner join crew Director on movies.Director_id = Director.id
 inner join crew Star on movies.Star_id = Star.id
 group by Director_id, Star_id
 having count(*))
 
-select *from duos
+select * from duos
+order by recurrences desc;
     '''
     return query
 
