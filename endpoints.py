@@ -17,6 +17,13 @@ from utils import endpoint
 def handle_query(query):
     return query
 
+# Generic Table Select
+@endpoint(path='table')
+def handle_table(table):
+    query = f'SELECT * FROM {table}'
+    
+    return query
+
 # Views
 @endpoint(path='cselect')
 def handle_complex_select():
@@ -99,13 +106,99 @@ def handle_insert(id, genre):
 
 # Updates for each table
 @endpoint(path='update')
-def handle_update(votes, score, movie_id):
-    query = f'update table reviews set votes = {votes}, score = {score} where id = (SELECT review_id FROM movies WHERE id = {movie_id})'
+def handle_insert(id, first_name: str | None, middle_name: str | None, last_name: str | None):
+    args = [first_name, middle_name, last_name]
+    attributes = ['first_name', 'middle_name', 'last_name']
+    values = {}
+    for i in range(len(args)):
+        if args[i] is not None:
+            values[attributes[i]] = args[i]
+    
+    if len(values) == 0: 
+        raise ValueError('No arguments given.')
+
+    updates = [f'{attr}=\"{val}\"' for attr, val in values.items()]
+
+    query = f'UPDATE crew SET {', '.join(updates)} WHERE id = {id}'
+
     return query
 
-# Deletes for each table
+@endpoint(path='update')
+def handle_insert(id, name, rating, genre_id, release_year, company_id, director_id, writer_id, star_id, review_id):
+    args = [name, rating, genre_id, release_year, company_id, director_id, writer_id, star_id, review_id]
+    attributes = ['name', 'rating', 'genre_id', 'release_year', 'company_id', 'director_id', 'writer_id', 'star_id', 'review_id']
+    values = {}
+    for i in range(len(args)):
+        if args[i] is not None:
+            values[attributes[i]] = args[i]
+    
+    if len(values) == 0: 
+        raise ValueError('No arguments given.')
+
+    updates = [f'{attr}=\"{val}\"' for attr, val in values.items()]
+
+    query = f'UPDATE movies SET {', '.join(updates)} WHERE id = {id}'
+
+    return query
+
+@endpoint(path='update')
+def handle_insert(id, company, country):
+    args = [company, country]
+    attributes = ['company', 'country']
+    values = {}
+    for i in range(len(args)):
+        if args[i] is not None:
+            values[attributes[i]] = args[i]
+
+    if len(values) == 0: 
+        raise ValueError('No arguments given.')    
+
+    updates = [f'{attr}=\"{val}\"' for attr, val in values.items()]
+
+    query = f'UPDATE studios SET {', '.join(updates)} WHERE id = {id}'
+
+    return query
+
+@endpoint(path='update')
+def handle_insert(id, score, votes):
+    args = [score, votes]
+    attributes = ['score', 'votes']
+    values = {}
+    for i in range(len(args)):
+        if args[i] is not None:
+            values[attributes[i]] = args[i]
+    
+    if len(values) == 0: 
+        raise ValueError('No arguments given.')
+
+    updates = [f'{attr}=\"{val}\"' for attr, val in values.items()]
+
+    query = f'UPDATE reviews SET {', '.join(updates)} WHERE id = {id}'
+
+    return query
+
+@endpoint(path='update')
+def handle_insert(id, genre):
+    args = [genre]
+    attributes = ['genre']
+    values = {}
+    for i in range(len(args)):
+        if args[i] is not None:
+            values[attributes[i]] = args[i]
+    
+    if len(values) == 0: 
+        raise ValueError('No arguments given.')
+
+    updates = [f'{attr}=\"{val}\"' for attr, val in values.items()]
+
+    query = f'UPDATE genres SET {', '.join(updates)} WHERE id = {id}'
+
+    return query
+
+# Delete for each table
 @endpoint(path='delete')
-def handle_delete(comparison, input):
-    query = f'delete from movies where {comparison} = {input}'
+def handle_delete(table, id):
+    query = f'DELETE FROM {table} WHERE id = {id}'
+
     return query
 

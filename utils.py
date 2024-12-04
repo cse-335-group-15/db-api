@@ -46,31 +46,43 @@ def endpoint(path: str):
                     }
                 }
             
-            with connection.cursor() as cursor:
-                cursor.execute(query)
-                result = cursor.fetchall()
-                connection.commit()
+            try:
+                with connection.cursor() as cursor:
+                    cursor.execute(query)
+                    result = cursor.fetchall()
+                    connection.commit()
 
-                if (result == None):
+                    if (result == None):
+                        return {
+                            'statusCode': 404,
+                            'body': json.dumps({
+                                'error': 'No results found'
+                            }),
+                            'headers': {
+                                'Access-Control-Allow-Origin': '*'
+                            }
+                        }            
+
                     return {
-                        'statusCode': 404,
-                        'body': json.dumps({
-                            'error': 'No results found'
-                        }),
-                        'headers': {
-                            'Access-Control-Allow-Origin': '*'
-                        }
-                    }            
-
+                            'statusCode': 200,
+                            'body': json.dumps({
+                                'columns': cursor.description,
+                                'data': result,
+                                'query': query
+                            }),
+                            'headers' :  {
+                                'Access-Control-Allow-Origin': '*'}
+                    }
+            except Exception as e:
                 return {
-                        'statusCode': 200,
-                        'body': json.dumps({
-                            'columns': cursor.description,
-                            'data': result,
-                            'query': query
-                        }),
-                        'headers' :  {
-                            'Access-Control-Allow-Origin': '*'}
+                    'statusCode': 400,
+                    'body': json.dumps({
+                        'error': 'Couldn\'t execute query',
+                        'msg': repr(e)
+                    }),
+                    'headers': {
+                        'Access-Control-Allow-Origin': '*'
+                    }
                 }
 
         key = f'/{api_config.profile}/{path}'
