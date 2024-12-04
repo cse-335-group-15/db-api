@@ -7,7 +7,7 @@ from api_config import profile
 # DO NOT INCLUDE THIS FILE IN PUBLICATION TO AWS LAMBDA
 
 # Change connection info to test stuff
-
+"""
 api_config.connection_info = {
     "host": "127.0.0.1",
     "user": "test",
@@ -16,6 +16,7 @@ api_config.connection_info = {
     "port": 3306,
     "connect_timeout": 5
 }
+"""
 # Write tests here
 # Tests are executed from bottom to top for each class.
 # TODO: Write tests for all the endpoints so I'm not gambling everytime I upload this
@@ -63,7 +64,7 @@ class TestEndpoints(unittest.TestCase):
     def test_cselect(self):
         event = {
             'httpMethod': 'POST',
-            'path': f'/{profile}/cselect'
+            'path': f'/{profile}/select'
         }
 
         expects = {
@@ -74,6 +75,23 @@ class TestEndpoints(unittest.TestCase):
             }
         }
         
+        self.assertEqual(lambda_handler(event, None), expects, "Not returning correct select query response")
+
+    def test_insert(self):
+        event = {
+            'httpMethod': 'POST',
+            'path': f'/{profile}/insert',
+            'body': f'{{ "id": "14", "genre": "test" }}'
+        }
+
+        expects = {
+            'statusCode': 200,
+            'body': '[[1, "world"], [2, "boo"], [3, "hello"]]',
+            'headers': {
+                'Access-Control-Allow-Origin': '*'
+            }
+        }
+
         self.assertEqual(lambda_handler(event, None), expects, "Not returning correct select query response")
 
 

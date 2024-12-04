@@ -25,9 +25,12 @@ def endpoint(path: str):
 
             args = {}
 
-            for key in body.keys():
-                if key in signature(func).parameters:
-                    args[key] = body[key]
+            for param in signature(func).parameters:
+                if param in body:
+                    args[param] = body[param]
+                else:
+                    raise TypeError(f"Missing parameter {param} in request body")
+
 
             try:
                 query = func(**args)
@@ -43,10 +46,11 @@ def endpoint(path: str):
                     }
                 }
             
-
+            print(query)
             with connection.cursor() as cursor:
                 cursor.execute(query)
                 result = cursor.fetchall()
+                connection.commit()
 
                 if (result == None):
                     return {

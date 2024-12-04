@@ -6,8 +6,6 @@ from utils import endpoint_list
 from api_config import profile
 
 
-
-
 def lambda_handler(event, context):
     # Route based on method and path
     if event['httpMethod'] != 'POST':
