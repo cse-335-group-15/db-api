@@ -46,7 +46,6 @@ def endpoint(path: str):
                     }
                 }
             
-            print(query)
             with connection.cursor() as cursor:
                 cursor.execute(query)
                 result = cursor.fetchall()
@@ -67,7 +66,8 @@ def endpoint(path: str):
                         'statusCode': 200,
                         'body': json.dumps({
                             'columns': cursor.description,
-                            'data': result
+                            'data': result,
+                            'query': query
                         }),
                         'headers' :  {
                             'Access-Control-Allow-Origin': '*'}
